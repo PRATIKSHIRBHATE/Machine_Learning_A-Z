@@ -18,16 +18,16 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, rando
 from sklearn.preprocessing import StandardScaler
 sc_X = StandardScaler()
 sc_y = StandardScaler()
-X = sc_X.fit_transform(X)
-y = sc_y.fit_transform(y)
+X = sc_X.fit_transform(X.reshape(-1, 1))
+y = sc_y.fit_transform(y.reshape(-1, 1))
 
 # Fitting SVR to the dataset
 from sklearn.svm import SVR
 regressor = SVR(kernel = 'rbf')
-regressor.fit(X, y)
+regressor.fit(X.reshape(-1, 1), y.reshape(-1, 1))
 
 # Predicting a new result
-y_pred = regressor.predict(6.5)
+y_pred = regressor.predict(np.array(6.5).reshape(-1, 1))
 y_pred = sc_y.inverse_transform(y_pred)
 
 # Visualising the SVR results
