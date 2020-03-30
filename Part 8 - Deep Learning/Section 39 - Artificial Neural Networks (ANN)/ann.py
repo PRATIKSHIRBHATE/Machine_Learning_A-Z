@@ -22,13 +22,17 @@ X = dataset.iloc[:, 3:13].values
 y = dataset.iloc[:, 13].values
 
 # Encoding categorical data
+# For Gender Column there are only two categories so LabelEncoding is enough
+# For Geography column there are three catogories so we need to oneHotEncoding and avoid dummy variable trap
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-labelencoder_X_1 = LabelEncoder()
-X[:, 1] = labelencoder_X_1.fit_transform(X[:, 1])
+#labelencoder_X_1 = LabelEncoder()
+#X[:, 1] = labelencoder_X_1.fit_transform(X[:, 1])
 labelencoder_X_2 = LabelEncoder()
 X[:, 2] = labelencoder_X_2.fit_transform(X[:, 2])
-onehotencoder = OneHotEncoder(categorical_features = [1])
-X = onehotencoder.fit_transform(X).toarray()
+
+from sklearn.compose import ColumnTransformer
+columnTransformer = ColumnTransformer([('encoder', OneHotEncoder(), [1])], remainder='passthrough')
+X=np.array(columnTransformer.fit_transform(X),dtype=np.str)
 X = X[:, 1:]
 
 # Splitting the dataset into the Training set and Test set
@@ -44,7 +48,7 @@ X_test = sc.transform(X_test)
 # Part 2 - Now let's make the ANN!
 
 # Importing the Keras libraries and packages
-import keras
+# import keras
 from keras.models import Sequential
 from keras.layers import Dense
 
